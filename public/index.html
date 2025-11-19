@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Teacher — AIを体系的に学ぶ学習サイト</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="hero__nav">
+        <div class="logo">AI Teacher</div>
+        <ul>
+          <li><a href="#tracks">トラック</a></li>
+          <li><a href="#roadmap">ロードマップ</a></li>
+          <li><a href="#lab">ラボ</a></li>
+          <li><a href="#quiz">クイズ</a></li>
+          <li><a href="#community">コミュニティ</a></li>
+        </ul>
+      </nav>
+      <div class="hero__content">
+        <p class="eyebrow">Foundation / Core / Advanced</p>
+        <h1>AIの仕組みと構造を、体験しながら深く理解する。</h1>
+        <p>
+          初心者から上級者までが同じキャンバスで学べるオンライン教材。
+          インタラクティブな可視化、進捗管理、適応型クイズ、コミュニティを
+          ひとつのサイトで提供します。
+        </p>
+        <div class="hero__cta">
+          <a class="btn primary" href="#roadmap">学習をはじめる</a>
+          <a class="btn ghost" href="#resources">リソースを見る</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="tracks" class="panel">
+        <div class="panel__header">
+          <h2>3つのトラックで体系的に学ぶ</h2>
+          <p>各トラックは共通のレッスン構造を持ち、理解→図解→実装→演習の順で進みます。</p>
+        </div>
+        <div class="grid" id="track-grid"></div>
+      </section>
+
+      <section id="roadmap" class="panel">
+        <div class="panel__header">
+          <h2>ロードマップ</h2>
+          <p>Foundation→Core→Advancedの順に進めることで、AIの内側の仕組みまで到達できます。</p>
+        </div>
+        <div class="timeline" id="timeline"></div>
+      </section>
+
+      <section class="panel" id="progress">
+        <div class="panel__header">
+          <h2>進捗管理</h2>
+          <p>ログイン不要でブラウザに学習履歴を保存。後からロードマップと同期できます。</p>
+        </div>
+        <div class="progress-card">
+          <div class="progress-card__summary">
+            <h3>学習状況</h3>
+            <p id="progress-summary">読み込み中...</p>
+            <div class="progress-bar"><span id="progress-bar-fill"></span></div>
+          </div>
+          <div class="progress-card__list" id="progress-list"></div>
+        </div>
+      </section>
+
+      <section id="lab" class="panel">
+        <div class="panel__header">
+          <h2>インタラクティブラボ</h2>
+          <p>可視化とハイパーパラメータ操作で学習プロセスを体感できます。</p>
+        </div>
+        <div class="lab-grid">
+          <article class="lab-card">
+            <h3>勾配降下の挙動</h3>
+            <canvas id="loss-chart" width="320" height="200" aria-label="学習曲線"></canvas>
+            <p class="lab-card__caption">公開サンプルデータのloss値から学習曲線を描画します。</p>
+          </article>
+          <article class="lab-card">
+            <h3>注意機構ヒートマップ</h3>
+            <div id="heatmap" role="img" aria-label="注意重みのヒートマップ"></div>
+            <p class="lab-card__caption">セルにカーソルを合わせると重みを確認できます。</p>
+          </article>
+          <article class="lab-card">
+            <h3>ハイパーパラメータプレイグラウンド</h3>
+            <label for="lr-slider">学習率: <span id="lr-value">0.10</span></label>
+            <input id="lr-slider" type="range" min="0.01" max="1" step="0.01" value="0.1" />
+            <label for="batch-slider">バッチサイズ: <span id="batch-value">32</span></label>
+            <input id="batch-slider" type="range" min="8" max="256" step="8" value="32" />
+            <div class="playground-output" id="playground-output"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="quiz" class="panel">
+        <div class="panel__header">
+          <h2>適応型クイズ</h2>
+          <p>難易度を選んで理解度をチェック。正答率に応じて次の問題が変化します。</p>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-card__controls">
+            <label>
+              レベルを選択
+              <select id="quiz-level">
+                <option value="foundation">Foundation</option>
+                <option value="core">Core</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </label>
+            <button class="btn secondary" id="next-question">問題を更新</button>
+          </div>
+          <div class="quiz-card__content">
+            <h3 id="quiz-question">問題を読み込み中...</h3>
+            <ul id="quiz-options" class="quiz-options"></ul>
+            <p id="quiz-feedback" class="quiz-feedback"></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="glossary" class="panel">
+        <div class="panel__header">
+          <h2>用語集</h2>
+          <p>レッスンやクイズで遭遇するキーワードを素早く確認できます。</p>
+        </div>
+        <dl class="glossary" id="glossary-list"></dl>
+      </section>
+
+      <section id="resources" class="panel">
+        <div class="panel__header">
+          <h2>リソース集</h2>
+          <p>外部の論文・講座・ツールをカテゴリ別に整理しました。</p>
+        </div>
+        <div class="resource-list" id="resource-list"></div>
+      </section>
+
+      <section id="community" class="panel">
+        <div class="panel__header">
+          <h2>コミュニティ</h2>
+          <p>モジュールごとのTipsや質問、イベント情報を集約しています。</p>
+        </div>
+        <div class="community-grid">
+          <article class="community-card">
+            <h3>最新ディスカッション</h3>
+            <ul id="discussion-list"></ul>
+          </article>
+          <article class="community-card">
+            <h3>Tips &amp; Tricks</h3>
+            <ul id="tips-list"></ul>
+          </article>
+          <article class="community-card">
+            <h3>学習チャレンジ</h3>
+            <p>今月のチャレンジ: <strong>Transformerのアテンション可視化を実装</strong></p>
+            <button class="btn primary" id="join-challenge">参加する</button>
+            <p id="challenge-feedback" class="challenge-feedback"></p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© 2024 AI Teacher. サンプル実装のための静的サイトです。</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
