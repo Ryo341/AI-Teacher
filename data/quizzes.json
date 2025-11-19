@@ -1,0 +1,39 @@
+[
+  {
+    "id": "foundation_vectors",
+    "track": "foundation",
+    "difficulty": 1,
+    "question": "2次元ベクトル(1,2)と(3,1)の内積は?",
+    "choices": ["5", "7", "10", "12"],
+    "answerIndex": 2,
+    "rationale": "1*3 + 2*1 = 5"
+  },
+  {
+    "id": "core_backprop",
+    "track": "core",
+    "difficulty": 2,
+    "question": "クロスエントロピー損失の勾配がソフトマックス出力とどのように結びつくか説明せよ",
+    "answerIndex": 0,
+    "choices": [
+      "y_hat - y",
+      "y * log(y_hat)",
+      "y_hat / y",
+      "(y - y_hat)^2"
+    ],
+    "rationale": "ソフトマックスとCEの合成微分でy_hat - yが得られる"
+  },
+  {
+    "id": "advanced_attention",
+    "track": "advanced",
+    "difficulty": 3,
+    "question": "スケールドドット積アテンションで温度1/sqrt(d_k)をかける理由は?",
+    "choices": [
+      "計算量削減",
+      "勾配爆発を防ぎ正規化する",
+      "マスク処理を容易にする",
+      "重み共有のため"
+    ],
+    "answerIndex": 1,
+    "rationale": "d_kが大きいと内積が増大するのでスケーリングで安定化"
+  }
+]

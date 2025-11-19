@@ -1,0 +1,30 @@
+- category: 論文
+  items:
+    - title: "Attention Is All You Need"
+      type: paper
+      url: https://arxiv.org/abs/1706.03762
+      notes: Transformerの基礎論文。
+    - title: "Scaling Laws for Neural Language Models"
+      type: paper
+      url: https://arxiv.org/abs/2001.08361
+      notes: モデルサイズと性能の経験則。
+- category: チュートリアル
+  items:
+    - title: Fast.ai Practical Deep Learning
+      type: course
+      url: https://course.fast.ai/
+      notes: 実践的な深層学習講座。
+    - title: MIT Introduction to Deep Learning
+      type: course
+      url: https://introtodeeplearning.com/
+      notes: MITの集中講義。
+- category: ツール
+  items:
+    - title: Weights & Biases
+      type: tool
+      url: https://wandb.ai/
+      notes: 実験管理プラットフォーム。
+    - title: Hugging Face Hub
+      type: tool
+      url: https://huggingface.co/
+      notes: モデル共有と推論API。
