@@ -7,6 +7,7 @@ AIの仕組みや構造を体系的に学べるオンライン教材サイトの
 - `content/` — 各トラックのMarkdownテンプレートと外部リソース集。
 - `data/quizzes.json` — 適応型クイズエンジン用の問題バンク。
 - `public/examples/` — 可視化コンポーネントで利用するサンプルデータ。
+- `public/ocean-wave-simulation.html` — Ocean Wave Simulationの単一HTMLデモ（静的公開）。
 - `src/components/` — レッスンレイアウト、Tipsパネル、可視化ウィジェット、コードプレイグラウンドなど。
 - `src/features/` — 進捗管理ロジックや適応型クイズエンジン。
 - `src/pages/` — ロードマップ、用語集、リソース集、コミュニティページなどのルーティングエントリ。

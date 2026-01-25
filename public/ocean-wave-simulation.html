@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ocean Wave Simulation</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --panel-bg: rgba(8, 16, 28, 0.78);
+      --panel-border: rgba(150, 190, 220, 0.35);
+      --text-primary: #e7f7ff;
+      --text-muted: rgba(231, 247, 255, 0.7);
+      --accent: #7cc3ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      color: var(--text-primary);
+      background: radial-gradient(circle at top, #1a2c47 0%, #081423 55%, #04070d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px 48px;
+    }
+
+    .app {
+      width: min(1100px, 94vw);
+      display: grid;
+      gap: 24px;
+    }
+
+    header {
+      text-align: center;
+    }
+
+    header h1 {
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin: 0 0 8px;
+      text-transform: uppercase;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    .canvas-wrap {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 28px 60px rgba(3, 8, 14, 0.55);
+      border: 1px solid rgba(124, 195, 255, 0.25);
+    }
+
+    canvas {
+      width: 100%;
+      height: 420px;
+      display: block;
+      background: linear-gradient(180deg, rgba(30, 52, 86, 0.9) 0%, rgba(6, 14, 26, 0.95) 65%, #03070d 100%);
+    }
+
+    .glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 10%, rgba(110, 185, 255, 0.35), transparent 55%),
+        radial-gradient(circle at 80% 15%, rgba(255, 210, 160, 0.12), transparent 60%);
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .controls {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 20px 24px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .controls h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .controls p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .sliders {
+      display: grid;
+      gap: 14px;
+    }
+
+    .slider {
+      display: grid;
+      gap: 6px;
+    }
+
+    .slider label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(124, 195, 255, 0.12);
+      border: 1px solid rgba(124, 195, 255, 0.3);
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>Ocean Wave Simulation</h1>
+      <p>Adjust the environment and watch the sea respond in real time.</p>
+    </header>
+
+    <section class="canvas-wrap">
+      <canvas id="ocean"></canvas>
+      <div class="glow" aria-hidden="true"></div>
+    </section>
+
+    <section class="controls">
+      <div>
+        <h2>Sea Conditions</h2>
+        <p>Fine-tune the motion and light to create a calming, realistic scene.</p>
+      </div>
+      <div class="sliders">
+        <div class="slider">
+          <label for="wind">Wind Speed <span id="windValue">18 km/h</span></label>
+          <input id="wind" type="range" min="5" max="40" value="18" />
+        </div>
+        <div class="slider">
+          <label for="height">Wave Height <span id="heightValue">1.4 m</span></label>
+          <input id="height" type="range" min="0.6" max="3" step="0.1" value="1.4" />
+        </div>
+        <div class="slider">
+          <label for="light">Lighting <span id="lightValue">60%</span></label>
+          <input id="light" type="range" min="30" max="90" value="60" />
+        </div>
+      </div>
+      <div class="footer">
+        <span class="tag">Realtime Rendering</span>
+        <span>Tip: softer winds create rolling swells.</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("ocean");
+    const ctx = canvas.getContext("2d");
+    const windSlider = document.getElementById("wind");
+    const heightSlider = document.getElementById("height");
+    const lightSlider = document.getElementById("light");
+    const windValue = document.getElementById("windValue");
+    const heightValue = document.getElementById("heightValue");
+    const lightValue = document.getElementById("lightValue");
+
+    const waves = Array.from({ length: 5 }, (_, index) => ({
+      amplitude: 12 + index * 8,
+      wavelength: 120 + index * 60,
+      speed: 0.3 + index * 0.08,
+      phase: Math.random() * Math.PI * 2,
+    }));
+
+    function resize() {
+      const { width, height } = canvas.getBoundingClientRect();
+      canvas.width = Math.floor(width * window.devicePixelRatio);
+      canvas.height = Math.floor(height * window.devicePixelRatio);
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+
+    function updateLabels() {
+      windValue.textContent = `${windSlider.value} km/h`;
+      heightValue.textContent = `${Number(heightSlider.value).toFixed(1)} m`;
+      lightValue.textContent = `${lightSlider.value}%`;
+    }
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function draw(timestamp) {
+      const time = timestamp * 0.0006;
+      const wind = Number(windSlider.value);
+      const height = Number(heightSlider.value);
+      const light = Number(lightSlider.value) / 100;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const width = canvas.clientWidth;
+      const heightPx = canvas.clientHeight;
+      const horizon = heightPx * 0.35;
+      const skyGradient = ctx.createLinearGradient(0, 0, 0, heightPx);
+      skyGradient.addColorStop(0, `rgba(90, 140, 190, ${lerp(0.25, 0.45, light)})`);
+      skyGradient.addColorStop(0.45, "rgba(12, 25, 44, 0.9)");
+      skyGradient.addColorStop(1, "rgba(4, 7, 12, 0.95)");
+      ctx.fillStyle = skyGradient;
+      ctx.fillRect(0, 0, width, heightPx);
+
+      const seaGradient = ctx.createLinearGradient(0, horizon, 0, heightPx);
+      seaGradient.addColorStop(0, `rgba(20, 45, 75, ${lerp(0.9, 1, light)})`);
+      seaGradient.addColorStop(0.6, `rgba(7, 18, 32, ${lerp(0.92, 1, light)})`);
+      seaGradient.addColorStop(1, "rgba(2, 5, 10, 1)");
+      ctx.fillStyle = seaGradient;
+      ctx.fillRect(0, horizon, width, heightPx - horizon);
+
+      const waveCount = Math.floor(90 + wind * 1.4);
+      const waveSpacing = width / waveCount;
+
+      for (let layer = 0; layer < 3; layer++) {
+        const depth = layer / 2;
+        ctx.beginPath();
+        ctx.moveTo(0, horizon + 30 + depth * 60);
+        for (let x = 0; x <= waveCount; x++) {
+          const xPos = x * waveSpacing;
+          const normalizedX = xPos / width;
+          let y = horizon + 40 + depth * 70;
+
+          waves.forEach((wave, index) => {
+            const swell = Math.sin(normalizedX * wave.wavelength + time * wave.speed * (wind / 10) + wave.phase);
+            const power = lerp(0.3, 0.75, depth) * (1 + index * 0.08);
+            y += swell * wave.amplitude * power * height;
+          });
+
+          ctx.lineTo(xPos, y);
+        }
+        ctx.lineTo(width, heightPx);
+        ctx.lineTo(0, heightPx);
+        ctx.closePath();
+
+        const alpha = lerp(0.12, 0.28, light) + depth * 0.08;
+        ctx.fillStyle = `rgba(110, 170, 210, ${alpha})`;
+        ctx.fill();
+      }
+
+      const highlightCount = Math.floor(18 + wind / 2);
+      for (let i = 0; i < highlightCount; i++) {
+        const x = (i / highlightCount) * width + Math.sin(time + i) * 18;
+        const y = horizon + 30 + (i % 6) * 24 + Math.cos(time * 1.4 + i) * 8;
+        const widthLine = 60 + (i % 4) * 20;
+        const gradient = ctx.createLinearGradient(x, y, x + widthLine, y);
+        gradient.addColorStop(0, `rgba(200, 230, 255, ${0.05 + light * 0.2})`);
+        gradient.addColorStop(1, "rgba(200, 230, 255, 0)");
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + widthLine, y);
+        ctx.stroke();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener("resize", () => {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      resize();
+    });
+
+    [windSlider, heightSlider, lightSlider].forEach((slider) => {
+      slider.addEventListener("input", updateLabels);
+    });
+
+    updateLabels();
+    resize();
+    requestAnimationFrame(draw);
+  </script>
+</body>
+</html>
